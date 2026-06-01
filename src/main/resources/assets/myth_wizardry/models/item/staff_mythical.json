@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:item/handheld",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 0, -90, 55 ],
+      "translation": [ 0, 4.0, 0.5 ],
+      "scale": [ 2,2,1 ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [ 0, 90, -55 ],
+      "translation": [ 0, 4.0, 0.5 ],
+      "scale": [ 2,2,1 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 0, -90, 55 ],
+      "translation": [ 1.13, 3.2, 1.5 ],
+      "scale": [ 1.5, 1.5, 1 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ 0, 90, -55 ],
+      "translation": [ 1.13, 3.2, 1.5 ],
+      "scale": [ 1.5, 1.5, 1 ]
+    },
+    "ground": {
+      "scale": [2.0, 2.0, 1.0]
+    },
+    "fixed": {
+      "scale": [2.0, 2.0, 1.0]
+    }
+  },
+  "textures": {
+    "layer0": "myth_wizardry:item/wands/two_handed/staff_mythical"
+  }
+}

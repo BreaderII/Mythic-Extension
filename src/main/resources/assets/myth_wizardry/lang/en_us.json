@@ -1,0 +1,30 @@
+{
+  "item.myth_wizardry.arcane_tome_mythical": "Mythical Arcane Tome",
+  "item.myth_wizardry.arcane_tome_divine": "Divine Arcane Tome",
+  "item.myth_wizardry.arcane_tome_primordial": "Primordial Arcane Tome",
+  "item.myth_wizardry.wand_mythical": "Mythical Wand",
+  "item.myth_wizardry.staff_novice": "Novice staff",
+  "item.myth_wizardry.staff_apprentice": "Apprentice staff",
+  "item.myth_wizardry.staff_advanced": "Advanced staff",
+  "item.myth_wizardry.staff_master": "Master staff",
+  "item.myth_wizardry.staff_mythical": "Mythical staff",
+
+  "item.myth_wizardry.wand_mythical_fire": "Mythical Wand of Fire",
+  "item.myth_wizardry.wand_mythical_ice": "Mythical Wand of Ice",
+  "item.myth_wizardry.wand_mythical_earth": "Mythical Wand of Earth",
+  "item.myth_wizardry.wand_mythical_healing": "Mythical Wand of Healing",
+  "item.myth_wizardry.wand_mythical_lightning": "Mythical Wand of Lightning",
+  "item.myth_wizardry.wand_mythical_necromancy": "Mythical Wand of Necromancy",
+  "item.myth_wizardry.wand_mythical_sorcery": "Mythical Wand of Sorcery",
+
+  "creativetab.myth_wizardry": "Wizardy Extension Items",
+  "creativetab.myth_wizardry_wands": "Wizardy Extension Wands",
+
+  "tier.ebwizardry.mythical": "Mythical",
+  "tier.ebwizardry.divine": "Divine",
+  "tier.ebwizardry.primordial": "Primordial",
+
+  "tooltip.myth_wizardry.staff.bonus": "%s to spell modifiers",
+  "tooltip.myth_wizardry.staff.cost": "%s Mana Cost",
+  "tooltip.myth_wizardry.staff.two_handed": "Two handed"
+}

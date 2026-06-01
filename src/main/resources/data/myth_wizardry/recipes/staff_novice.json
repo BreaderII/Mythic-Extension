@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "x": {
+      "item": "minecraft:gold_nugget"
+    },
+    "y": {
+      "item": "minecraft:stick"
+    },
+    "z": {
+      "item": "ebwizardry:magic_crystal_grand"
+    }
+  },
+  "pattern": [
+    "  z",
+    " y ",
+    "x  "
+  ],
+  "result": {
+    "item": "myth_wizardry:staff_novice"
+  },
+  "show_notification": true
+}
