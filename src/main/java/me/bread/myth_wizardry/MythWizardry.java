@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.logging.LogUtils;
 import me.bread.myth_wizardry.registers.ModCreativeTabs;
 import me.bread.myth_wizardry.registers.ModItems;
+import me.bread.myth_wizardry.registers.ModSpells;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -38,6 +39,7 @@ public class MythWizardry {
 
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
+        ModSpells.SPELLS.register(modEventBus);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
