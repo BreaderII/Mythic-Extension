@@ -2,11 +2,13 @@ package me.bread.myth_wizardry.spells.magic.mythical;
 
 import com.binaris.wizardry.api.client.ParticleBuilder;
 import com.binaris.wizardry.api.content.DeferredObject;
+import com.binaris.wizardry.api.content.item.IElementValue;
 import com.binaris.wizardry.api.content.spell.Element;
 import com.binaris.wizardry.api.content.spell.SpellAction;
 import com.binaris.wizardry.api.content.spell.SpellTier;
 import com.binaris.wizardry.api.content.spell.SpellType;
 import com.binaris.wizardry.api.content.spell.internal.CastContext;
+import com.binaris.wizardry.api.content.spell.internal.PlayerCastContext;
 import com.binaris.wizardry.api.content.spell.internal.SpellModifiers;
 import com.binaris.wizardry.api.content.spell.properties.SpellProperties;
 import com.binaris.wizardry.api.content.util.MagicDamageSource;
@@ -51,7 +53,6 @@ public class ManaRay extends RaySpell {
 
     @Override
     protected boolean onBlockHit(CastContext ctx, BlockHitResult blockHit, Vec3 origin) {
-        // Можно добавить эффект при попадании в блок
         return true;
     }
 
@@ -60,17 +61,10 @@ public class ManaRay extends RaySpell {
         return true;
     }
 
-    // КРИТИЧЕСКИ ВАЖНО: делаем заклинание непрерывным
     @Override
     public boolean isInstantCast() {
         return true;
     }
-
-    @Override
-    protected void playSound(Level world, double x, double y, double z, int ticksInUse, int duration) {
-        this.playSoundLoop(world, x, y, z, ticksInUse, duration);
-    }
-
     @Override
     protected void spawnParticle(CastContext ctx, double x, double y, double z, double vx, double vy, double vz) {
         int[] rgb = null;
