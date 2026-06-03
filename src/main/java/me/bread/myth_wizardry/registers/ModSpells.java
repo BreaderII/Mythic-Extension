@@ -6,7 +6,7 @@ import com.binaris.wizardry.core.registry.EBRegistries;
 import com.binaris.wizardry.setup.registries.RegisterFunction;
 import com.binaris.wizardry.setup.registries.Spells;
 import me.bread.myth_wizardry.MythWizardry;
-import me.bread.myth_wizardry.spells.magic.mythical.ManaRay;
+import me.bread.myth_wizardry.spells.magic.advanced.ManaRay;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;

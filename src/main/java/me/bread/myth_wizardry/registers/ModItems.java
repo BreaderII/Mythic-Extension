@@ -19,7 +19,7 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, MythWizardry.MOD_ID);
 
     public static final RegistryObject<Item> ARCANE_TOME_MYTHICAL = ITEMS.register("arcane_tome_mythical",
-            () -> new ArcaneTomeItem(ExtSpellTiers.MYTHICAL){
+            () -> new ArcaneTomeItem(ModTiers.MYTHICAL.get()){
                 @Override
                 public @NotNull Rarity getRarity(@NotNull ItemStack stack) {
                     return Rarity.EPIC;
@@ -27,7 +27,7 @@ public class ModItems {
             });
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND = ITEMS.register("wand_mythical",
-            () -> new WandItem(ExtSpellTiers.MYTHICAL,null));
+            () -> new WandItem(ModTiers.MYTHICAL.get(),null));
 
     public static final RegistryObject<WandItem> NOVICE_STAFF = ITEMS.register("staff_novice",
             () -> new StaffItem(SpellTiers.NOVICE, null));
@@ -42,28 +42,28 @@ public class ModItems {
             () -> new StaffItem(SpellTiers.MASTER, null));
 
     public static final RegistryObject<WandItem> MYTHICAL_STAFF = ITEMS.register("staff_mythical",
-            () -> new StaffItem(ExtSpellTiers.MYTHICAL, null));
+            () -> new StaffItem(ModTiers.MYTHICAL.get(), null));
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND_FIRE = ITEMS.register("wand_mythical_fire",
-            () -> new WandItem(ExtSpellTiers.MYTHICAL, Elements.FIRE));
+            () -> new WandItem(ModTiers.MYTHICAL.get(), Elements.FIRE));
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND_ICE = ITEMS.register("wand_mythical_ice",
-            () -> new WandItem(ExtSpellTiers.MYTHICAL,Elements.ICE));
+            () -> new WandItem(ModTiers.MYTHICAL.get(),Elements.ICE));
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND_EARTH = ITEMS.register("wand_mythical_earth",
-            () -> new WandItem(ExtSpellTiers.MYTHICAL,Elements.EARTH));
+            () -> new WandItem(ModTiers.MYTHICAL.get(),Elements.EARTH));
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND_HEALING = ITEMS.register("wand_mythical_healing",
-            () -> new WandItem(ExtSpellTiers.MYTHICAL,Elements.HEALING));
+            () -> new WandItem(ModTiers.MYTHICAL.get(),Elements.HEALING));
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND_LIGHTNING = ITEMS.register("wand_mythical_lightning",
-            () -> new WandItem(ExtSpellTiers.MYTHICAL,Elements.LIGHTNING));
+            () -> new WandItem(ModTiers.MYTHICAL.get(),Elements.LIGHTNING));
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND_NECROMANCY = ITEMS.register("wand_mythical_necromancy",
-            () -> new WandItem(ExtSpellTiers.MYTHICAL,Elements.NECROMANCY));
+            () -> new WandItem(ModTiers.MYTHICAL.get(),Elements.NECROMANCY));
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND_SORCERY = ITEMS.register("wand_mythical_sorcery",
-            () -> new WandItem(ExtSpellTiers.MYTHICAL,Elements.SORCERY));
+            () -> new WandItem(ModTiers.MYTHICAL.get(),Elements.SORCERY));
 
 
 

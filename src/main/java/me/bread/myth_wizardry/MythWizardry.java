@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import me.bread.myth_wizardry.registers.ModCreativeTabs;
 import me.bread.myth_wizardry.registers.ModItems;
 import me.bread.myth_wizardry.registers.ModSpells;
+import me.bread.myth_wizardry.registers.ModTiers;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -30,19 +31,13 @@ public class MythWizardry {
 
     public MythWizardry(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
-
-        modEventBus.addListener(this::commonSetup);
-
         MixinBootstrap.init();
 
         MinecraftForge.EVENT_BUS.register(this);
-
+        ModTiers.TIERS.register(modEventBus);
+        ModSpells.SPELLS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
-        ModSpells.SPELLS.register(modEventBus);
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

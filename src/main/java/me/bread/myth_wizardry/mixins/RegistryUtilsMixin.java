@@ -5,7 +5,7 @@ import com.binaris.wizardry.api.content.spell.SpellTier;
 import com.binaris.wizardry.api.content.util.RegistryUtils;
 import com.binaris.wizardry.setup.registries.Elements;
 import me.bread.myth_wizardry.MythWizardry;
-import me.bread.myth_wizardry.registers.ExtSpellTiers;
+import me.bread.myth_wizardry.registers.ModTiers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -24,7 +24,7 @@ public class RegistryUtilsMixin {
         if (element != Elements.MAGIC && element !=null) wandName += "_" + element.getLocation().getPath();
         Item wand = BuiltInRegistries.ITEM.get(new ResourceLocation(MythWizardry.MOD_ID, wandName));
         MythWizardry.LOGGER.info(wand.toString());
-        if (tier == ExtSpellTiers.MYTHICAL) {
+        if (tier == ModTiers.MYTHICAL.get()) {
 
             if (wand != Items.AIR) {
                 cir.setReturnValue(wand);
