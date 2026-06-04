@@ -24,11 +24,8 @@ public class RegistryUtilsMixin {
         if (element != Elements.MAGIC && element !=null) wandName += "_" + element.getLocation().getPath();
         Item wand = BuiltInRegistries.ITEM.get(new ResourceLocation(MythWizardry.MOD_ID, wandName));
         MythWizardry.LOGGER.info(wand.toString());
-        if (tier == ModTiers.MYTHICAL.get()) {
-
-            if (wand != Items.AIR) {
-                cir.setReturnValue(wand);
-            }
+        if (wand != Items.AIR) {
+            cir.setReturnValue(wand);
         }
     }
 }

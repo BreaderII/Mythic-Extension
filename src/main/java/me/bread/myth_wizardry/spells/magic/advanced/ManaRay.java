@@ -3,6 +3,7 @@ package me.bread.myth_wizardry.spells.magic.advanced;
 import com.binaris.wizardry.api.client.ParticleBuilder;
 import com.binaris.wizardry.api.content.DeferredObject;
 import com.binaris.wizardry.api.content.item.IElementValue;
+import com.binaris.wizardry.api.content.item.ITierValue;
 import com.binaris.wizardry.api.content.spell.Element;
 import com.binaris.wizardry.api.content.spell.SpellAction;
 import com.binaris.wizardry.api.content.spell.SpellTier;
@@ -76,37 +77,45 @@ public class ManaRay extends RaySpell {
                     rgb = element.getColors();
                 }
             }
+            if (rgb == null || rgb.length < 3) {
+                rgb = Elements.MAGIC.getColors();
+            }
+            SpellTier tier = null;
+            if (stack.getItem() instanceof ITierValue elementValue) {
+                tier = elementValue.getTier(stack);
+                if (tier == null) {
+                    tier = SpellTiers.NOVICE;
+                }
+            }
+            for (int i = 0; i < tier.getLevel()+1 ; i++) {
+                float randomOffset = 0.5f - ctx.world().random.nextFloat();
+
+                ParticleBuilder.create(EBParticles.SPARKLE)
+                        .pos(x + randomOffset, y + randomOffset, z + randomOffset)
+                        .color(rgb[0])
+                        .scale(2 + ctx.world().random.nextFloat())
+                        .collide(true)
+                        .spawn(ctx.world());
+
+                randomOffset = 0.5f - ctx.world().random.nextFloat();
+
+                ParticleBuilder.create(EBParticles.SPARKLE)
+                        .pos(x + randomOffset, y + randomOffset, z + randomOffset)
+                        .color(rgb[1])
+                        .scale(1 + ctx.world().random.nextFloat())
+                        .collide(true)
+                        .spawn(ctx.world());
+
+                randomOffset = 0.5f - ctx.world().random.nextFloat();
+
+                ParticleBuilder.create(EBParticles.SPARKLE)
+                        .pos(x + randomOffset, y + randomOffset, z + randomOffset)
+                        .color(rgb[2])
+                        .scale(3 + ctx.world().random.nextFloat())
+                        .collide(true)
+                        .spawn(ctx.world());
+            }
         }
-        if (rgb == null || rgb.length < 3) {
-            rgb = Elements.MAGIC.getColors();
-        }
-
-        float randomOffset = 0.5f - ctx.world().random.nextFloat();
-
-        ParticleBuilder.create(EBParticles.SPARKLE)
-                .pos(x + randomOffset, y + randomOffset, z + randomOffset)
-                .color(rgb[0])
-                .scale(2 + ctx.world().random.nextFloat())
-                .collide(true)
-                .spawn(ctx.world());
-
-        randomOffset = 0.5f - ctx.world().random.nextFloat();
-
-        ParticleBuilder.create(EBParticles.SPARKLE)
-                .pos(x + randomOffset, y + randomOffset, z + randomOffset)
-                .color(rgb[1])
-                .scale(1 + ctx.world().random.nextFloat())
-                .collide(true)
-                .spawn(ctx.world());
-
-        randomOffset = 0.5f - ctx.world().random.nextFloat();
-
-        ParticleBuilder.create(EBParticles.SPARKLE)
-                .pos(x + randomOffset, y + randomOffset, z + randomOffset)
-                .color(rgb[2])
-                .scale(3 + ctx.world().random.nextFloat())
-                .collide(true)
-                .spawn(ctx.world());
     }
 
     @Override

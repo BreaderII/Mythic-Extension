@@ -8,10 +8,6 @@ import me.bread.myth_wizardry.registers.ModCreativeTabs;
 import me.bread.myth_wizardry.registers.ModItems;
 import me.bread.myth_wizardry.registers.ModSpells;
 import me.bread.myth_wizardry.registers.ModTiers;
-import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -34,7 +30,6 @@ public class MythWizardry {
         MixinBootstrap.init();
 
         MinecraftForge.EVENT_BUS.register(this);
-        ModTiers.TIERS.register(modEventBus);
         ModSpells.SPELLS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
