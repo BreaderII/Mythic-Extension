@@ -41,7 +41,6 @@ public class MagicShieldEvents {
     public static void onRenderPlayer(RenderPlayerEvent.Post event) {
         Player player = event.getEntity();
 
-        // Проверяем, нужно ли рендерить щит (например, есть ли эффект)
         if (shouldRenderShield(player)) {
             renderShield(event.getPoseStack(), event.getMultiBufferSource(),
                     event.getPartialTick(), player,event);
@@ -56,19 +55,16 @@ public class MagicShieldEvents {
                                      float partialTick, Player player,RenderPlayerEvent.Post event) {
         poseStack.pushPose();
 
-        // Центрируем на игроке
         poseStack.translate(0, player.getBbHeight() / 2, 0);
         poseStack.scale(0.8f, 0.8f, 0.8f);
 
-        // Включаем правильные настройки для прозрачности
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.depthMask(false); // Отключаем запись в буфер глубины для прозрачных объектов
+        RenderSystem.depthMask(false);
 
         MagicShieldModel model = getModel();
         model.setupAnim(player, 0, 0, player.tickCount + partialTick, 0, 0);
 
-        // Используем правильный RenderType для прозрачных объектов
         VertexConsumer vertexConsumer = bufferSource.getBuffer(
                 RenderType.entityTranslucent(TEXTURE)
         );
@@ -77,7 +73,7 @@ public class MagicShieldEvents {
                 event.getPackedLight(), OverlayTexture.NO_OVERLAY,
                 1.0f, 1.0f, 1.0f, 0.8f);
 
-        // Возвращаем настройки
+
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
 
