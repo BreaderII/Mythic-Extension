@@ -21,15 +21,21 @@ import com.binaris.wizardry.setup.registries.Elements;
 import com.binaris.wizardry.setup.registries.SpellTiers;
 import com.binaris.wizardry.setup.registries.client.EBParticles;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Random;
 
 public class ManaRay extends RaySpell {
 
@@ -43,17 +49,19 @@ public class ManaRay extends RaySpell {
     @Override
     protected boolean onEntityHit(CastContext ctx, EntityHitResult entityHit, Vec3 origin) {
         if (entityHit.getEntity() instanceof LivingEntity target) {
-
-            float damage = property(DefaultProperties.DAMAGE) * ctx.modifiers().get(SpellModifiers.POTENCY);
-            DamageSource source = MagicDamageSource.causeDirectMagicDamage(ctx.caster(), EBDamageSources.MAGIC);
-
-            target.hurt(source, damage);
+            if (ctx instanceof PlayerCastContext context) {
+                if (target.distanceTo(context.caster()) <= property(DefaultProperties.RANGE)) {
+                    dealDamageToEntity(ctx, target);
+                    dealAOEDamage(ctx, target.position());
+                }
+            }
         }
         return true;
     }
 
     @Override
     protected boolean onBlockHit(CastContext ctx, BlockHitResult blockHit, Vec3 origin) {
+        dealAOEDamage(ctx, blockHit.getLocation());
         return true;
     }
 
@@ -66,64 +74,104 @@ public class ManaRay extends RaySpell {
     public boolean isInstantCast() {
         return true;
     }
+
+    private void dealDamageToEntity(CastContext ctx, LivingEntity target) {
+        if (ctx instanceof PlayerCastContext context) {
+            ItemStack stack = context.caster().getItemInHand(context.hand());
+            SpellTier tier = getSpellTierFromStack(stack);
+
+            float damage = property(DefaultProperties.DAMAGE) * ctx.modifiers().get(SpellModifiers.POTENCY) * (tier.getLevel() + 1);
+            DamageSource source = MagicDamageSource.causeDirectMagicDamage(ctx.caster(), EBDamageSources.MAGIC);
+
+            target.hurt(source, damage);
+            spawnHitParticles(ctx, target.position());
+        }
+    }
+
+    private void dealAOEDamage(CastContext ctx, Vec3 center) {
+        if (ctx instanceof PlayerCastContext context) {
+            ItemStack stack = context.caster().getItemInHand(context.hand());
+            SpellTier tier = getSpellTierFromStack(stack);
+
+            float baseDamage = property(DefaultProperties.DAMAGE) * ctx.modifiers().get(SpellModifiers.POTENCY) * (tier.getLevel() + 1);
+            float aoeDamage = baseDamage * 0.5f;
+            double radius = property(DefaultProperties.RANGE)/5 + 0.5 * getSpellTierFromStack(stack).getLevel();
+
+            AABB aabb = new AABB(
+                    center.x - radius, center.y - radius, center.z - radius,
+                    center.x + radius, center.y + radius, center.z + radius
+            );
+
+            List<LivingEntity> entities = ctx.world().getEntitiesOfClass(
+                    LivingEntity.class, aabb,
+                    e -> e != ctx.caster() && e.distanceToSqr(center)<= radius
+            );
+
+            DamageSource source = MagicDamageSource.causeDirectMagicDamage(ctx.caster(), EBDamageSources.MAGIC);
+
+            for (LivingEntity entity : entities) {
+                entity.hurt(source, aoeDamage);
+                spawnHitParticles(ctx, entity.position());
+            }
+        }
+    }
+
+    private SpellTier getSpellTierFromStack(ItemStack stack) {
+        if (stack.getItem() instanceof ITierValue tierValue) {
+            SpellTier tier = tierValue.getTier(stack);
+            if (tier != null) return tier;
+        }
+        return SpellTiers.NOVICE;
+    }
+
+    private void spawnHitParticles(CastContext ctx, Vec3 position) {
+        for (int i = 0; i < 10; i++) {
+            spawnParticle(ctx,position.x,position.y,position.z,position.x,position.y,position.z);
+        }
+        ctx.world().playSound(null, position.x, position.y, position.z,
+                SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);
+    }
+
     @Override
     protected void spawnParticle(CastContext ctx, double x, double y, double z, double vx, double vy, double vz) {
         int[] rgb = null;
+        SpellTier tier = null;
+
         if (ctx instanceof PlayerCastContext context) {
             ItemStack stack = context.caster().getItemInHand(context.hand());
             if (stack.getItem() instanceof IElementValue elementValue) {
                 Element element = elementValue.getElement();
-                if (element != null) {
-                    rgb = element.getColors();
-                }
+                if (element != null) rgb = element.getColors();
             }
-            if (rgb == null || rgb.length < 3) {
-                rgb = Elements.MAGIC.getColors();
+            if (stack.getItem() instanceof ITierValue tierValue) {
+                tier = tierValue.getTier(stack);
             }
-            SpellTier tier = null;
-            if (stack.getItem() instanceof ITierValue elementValue) {
-                tier = elementValue.getTier(stack);
-                if (tier == null) {
-                    tier = SpellTiers.NOVICE;
-                }
-            }
-            for (int i = 0; i < tier.getLevel()+1 ; i++) {
-                float randomOffset = 0.5f - ctx.world().random.nextFloat();
+        }
 
-                ParticleBuilder.create(EBParticles.SPARKLE)
-                        .pos(x + randomOffset, y + randomOffset, z + randomOffset)
-                        .color(rgb[0])
-                        .scale(2 + ctx.world().random.nextFloat())
-                        .collide(true)
-                        .spawn(ctx.world());
+        if (tier == null) tier = SpellTiers.NOVICE;
+        if (rgb == null || rgb.length < 3) rgb = Elements.MAGIC.getColors();
 
-                randomOffset = 0.5f - ctx.world().random.nextFloat();
+        int particleCount = (tier.getLevel() + 1) * 3;
 
-                ParticleBuilder.create(EBParticles.SPARKLE)
-                        .pos(x + randomOffset, y + randomOffset, z + randomOffset)
-                        .color(rgb[1])
-                        .scale(1 + ctx.world().random.nextFloat())
-                        .collide(true)
-                        .spawn(ctx.world());
+        for (int i = 0; i < particleCount; i++) {
+            float randomOffset = (ctx.world().random.nextFloat() - 0.5f) * 0.5f;
+            int color = rgb[ctx.world().random.nextInt(rgb.length)];
 
-                randomOffset = 0.5f - ctx.world().random.nextFloat();
-
-                ParticleBuilder.create(EBParticles.SPARKLE)
-                        .pos(x + randomOffset, y + randomOffset, z + randomOffset)
-                        .color(rgb[2])
-                        .scale(3 + ctx.world().random.nextFloat())
-                        .collide(true)
-                        .spawn(ctx.world());
-            }
+            ParticleBuilder.create(EBParticles.SPARKLE)
+                    .pos(x + randomOffset, y + randomOffset, z + randomOffset)
+                    .color(color)
+                    .scale(1.5f + ctx.world().random.nextFloat() * 2f)
+                    .collide(true)
+                    .spawn(ctx.world());
         }
     }
 
     @Override
     protected @NotNull SpellProperties properties() {
         return SpellProperties.builder()
-                .assignBaseProperties(SpellTiers.APPRENTICE, Elements.MAGIC, SpellType.ATTACK, SpellAction.POINT, 5, 5, 20)
+                .assignBaseProperties(SpellTiers.APPRENTICE, Elements.MAGIC, SpellType.ATTACK, SpellAction.POINT, 20, 10, 20)
                 .add(DefaultProperties.RANGE, 15f)
-                .add(DefaultProperties.DAMAGE, 4F)
+                .add(DefaultProperties.DAMAGE, 2F)
                 .build();
     }
 }

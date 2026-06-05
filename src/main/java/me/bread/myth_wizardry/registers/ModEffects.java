@@ -1,14 +1,11 @@
 package me.bread.myth_wizardry.registers;
 
 import me.bread.myth_wizardry.MythWizardry;
-import me.bread.myth_wizardry.effects.MagicShield;
+import me.bread.myth_wizardry.spells.magic.advanced.magic_shield.MagicShieldEffect;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.function.Supplier;
 
 public class ModEffects {
 
@@ -16,6 +13,6 @@ public class ModEffects {
             DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MythWizardry.MOD_ID);
 
     public static final RegistryObject<MobEffect> MAGIC_SHIELD =
-            MOB_EFFECTS.register("custom_effect", MagicShield::new);
+            MOB_EFFECTS.register("mana_shield", MagicShieldEffect::new);
 
 }

@@ -1,10 +1,9 @@
-package me.bread.myth_wizardry.models;
+package me.bread.myth_wizardry.spells.magic.advanced.magic_shield;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.bread.myth_wizardry.MythWizardry;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

@@ -26,5 +26,8 @@
 
   "tooltip.myth_wizardry.staff.bonus": "%s to spell modifiers",
   "tooltip.myth_wizardry.staff.cost": "%s Mana Cost",
-  "tooltip.myth_wizardry.staff.two_handed": "Two handed"
+  "tooltip.myth_wizardry.staff.two_handed": "Two handed",
+
+  "spell.myth_wizardry.mana_ray" : "Mana ray",
+  "spell.myth_wizardry.magic_shield" : "Magic shield"
 }
