@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import me.bread.myth_wizardry.spells.magic.advanced.magic_shield.MagicShieldModel;
 import me.bread.myth_wizardry.packets.NetworkHandler;
 import me.bread.myth_wizardry.registers.*;
+import me.bread.myth_wizardry.system.ManaData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -12,6 +13,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
 
@@ -19,6 +22,7 @@ import org.spongepowered.asm.launch.MixinBootstrap;
 public class MythWizardry {
     public static final String MOD_ID = "myth_wizardry";
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static final String PROTOCOL_VERSION = "0.1.0";
 
     public MythWizardry(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
@@ -30,6 +34,14 @@ public class MythWizardry {
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
         ModEffects.MOB_EFFECTS.register(modEventBus);
+    }
+    @SubscribeEvent
+    public static void onRegisterDataSerializers(RegisterEvent event) {
+        if (event.getRegistryKey().equals(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS)) {
+            event.register(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, helper -> {
+                ManaData.registerDataSerializers();
+            });
+        }
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

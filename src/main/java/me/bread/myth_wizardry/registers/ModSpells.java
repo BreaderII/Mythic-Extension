@@ -15,4 +15,5 @@ public class ModSpells {
 
     public static final RegistryObject<Spell> MAGIC_SHIELD = SPELLS.register("magic_shield", MagicShield::new);
 
+
 }
