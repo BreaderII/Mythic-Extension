@@ -26,5 +26,12 @@ public class NetworkHandler {
                 MagicShieldCreateSyncPacketS2C::decode,
                 MagicShieldCreateSyncPacketS2C::handle
         );
+        INSTANCE.registerMessage(
+                packetId++,
+                PacketUpdateWidgetStates.class,
+                PacketUpdateWidgetStates::encode,
+                PacketUpdateWidgetStates::decode,
+                PacketUpdateWidgetStates::handle
+        );
     }
 }

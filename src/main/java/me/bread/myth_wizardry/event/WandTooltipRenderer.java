@@ -69,6 +69,7 @@ public class WandTooltipRenderer {
         if (tooltipLines.isEmpty()) {
             tooltipLines = List.of(stack.getHoverName());
         }
+        tooltipLines.add(Component.literal(wand.getMana(stack) + " / " + wand.getManaCapacity(stack)).withStyle(ChatFormatting.BLUE));
 
         int textWidth = 0;
         for (Component line : tooltipLines) {
@@ -86,7 +87,7 @@ public class WandTooltipRenderer {
         int tooltipHeight = baseHeight;
 
         boolean showAdvancedId = mc.options.advancedItemTooltips;
-        int idHeight = 0;
+        int idHeight;
         String idString = null;
         int idWidth = 0;
         if (showAdvancedId) {

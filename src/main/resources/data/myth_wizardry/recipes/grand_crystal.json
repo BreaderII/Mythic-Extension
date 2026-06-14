@@ -1,17 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "key": {
-    "#": {
-      "item": "ebwizardry:magic_crystal"
-    }
+  "type": "ebwizardry:imbuement_altar",
+  "center": {
+    "item": "ebwizardry:magic_crystal"
   },
-  "pattern": [
-    "##",
-    "##"
+  "receptacles": [
+    {
+      "item": "ebwizardry:spectral_dust"
+    },
+    {
+      "item": "ebwizardry:spectral_dust"
+    },
+    {
+      "item": "ebwizardry:spectral_dust"
+    },
+    {
+      "item": "ebwizardry:spectral_dust"
+    }
   ],
   "result": {
     "count": 1,
     "item": "ebwizardry:magic_crystal_grand"
-  },
-  "show_notification": true
+  }
 }

@@ -5,7 +5,9 @@ import com.binaris.wizardry.content.item.WandItem;
 import com.binaris.wizardry.setup.registries.Elements;
 import com.binaris.wizardry.setup.registries.SpellTiers;
 import me.bread.myth_wizardry.MythWizardry;
+import me.bread.myth_wizardry.items.mage.MageHeartItem;
 import me.bread.myth_wizardry.items.staff.StaffItem;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -65,9 +67,15 @@ public class ModItems {
     public static final RegistryObject<WandItem> MYTHICAL_WAND_SORCERY = ITEMS.register("wand_mythical_sorcery",
             () -> new WandItem(ModTiers.MYTHICAL,Elements.SORCERY));
 
-
-
-
+    public static final RegistryObject<MageHeartItem> MAGE_HEART = ITEMS.register("mage_heart",
+            () -> new MageHeartItem(new Item.Properties()
+                    .stacksTo(1)
+                    .fireResistant()
+                    .food(new FoodProperties.Builder()
+                            .nutrition(0)
+                            .saturationMod(0f)
+                            .alwaysEat()
+                            .build())));
 
 //    public static final RegistryObject<Item> ARCANE_TOME_DIVINE = ITEMS.register("arcane_tome_divine",
 //            () -> new ArcaneTomeItem(ExtSpellTiers.DIVINE));

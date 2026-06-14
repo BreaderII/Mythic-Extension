@@ -13,6 +13,6 @@ public class ModEffects {
             DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MythWizardry.MOD_ID);
 
     public static final RegistryObject<MobEffect> MAGIC_SHIELD =
-            MOB_EFFECTS.register("mana_shield", MagicShieldEffect::new);
+            MOB_EFFECTS.register("magic_shield", MagicShieldEffect::new);
 
 }

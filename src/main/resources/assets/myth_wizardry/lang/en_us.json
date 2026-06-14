@@ -16,6 +16,7 @@
   "item.myth_wizardry.wand_mythical_lightning": "Mythical Wand of Lightning",
   "item.myth_wizardry.wand_mythical_necromancy": "Mythical Wand of Necromancy",
   "item.myth_wizardry.wand_mythical_sorcery": "Mythical Wand of Sorcery",
+  "item.myth_wizardry.mage_heart": "Mage heart",
 
   "creativetab.myth_wizardry": "Wizardy Extension Items",
   "creativetab.myth_wizardry_wands": "Wizardy Extension Wands",
@@ -28,6 +29,24 @@
   "tooltip.myth_wizardry.staff.cost": "%s Mana Cost",
   "tooltip.myth_wizardry.staff.two_handed": "Two handed",
 
-  "spell.myth_wizardry.mana_ray" : "Mana ray",
-  "spell.myth_wizardry.magic_shield" : "Magic shield"
+  "tooltip.myth_wizardry.mage_heart.max_mana": "Mana : %s",
+  "tooltip.myth_wizardry.mage_heart.reg_mana": "Mana regeneration : %s",
+
+  "spell.myth_wizardry.mana_ray" : "Mana Ray",
+  "spell.myth_wizardry.mana_ray.desc" : "An ancient spell whose power increases with the mage's mastery. Fires a beam of concentrated mana.",
+
+  "spell.myth_wizardry.magic_shield" : "Magic Shield",
+  "spell.myth_wizardry.magic_shield.desc" : "An ancient spell whose power increases with the mage's mastery. Creates a shield around the mage that absorbs incoming damage.",
+
+
+  "effect.myth_wizardry.magic_shield": "Magic Shield",
+  "effect.myth_wizardry.magic_shield.description": "Creates a magical shield that absorbs damage",
+
+  "screen.mythical_extension.wand_config": "Wand config screen",
+
+  "tooltip.myth_wizardry.mana_first": "Use player mana then wand mana is end",
+  "tooltip.myth_wizardry.mana_second": "Use wand mana then player mana is end",
+  "tooltip.myth_wizardry.mode_0": "Use mana from only wand",
+  "tooltip.myth_wizardry.mode_1": "Use player mana from only",
+  "tooltip.myth_wizardry.mode_2": "Mixed mana from player and wand"
 }
