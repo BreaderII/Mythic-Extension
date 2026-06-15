@@ -119,7 +119,7 @@ public class InventoryWidget {
             int mouseX = event.getMouseX();
             int mouseY = event.getMouseY();
 
-            guiGraphics.blit(WIDGET_BACKGROUND, backgroundX, backgroundY, 0, 0, 68, 38, 68, 28);
+            guiGraphics.blit(WIDGET_BACKGROUND, backgroundX, backgroundY, 0, 0, 68, 28, 68, 28);
 
             if (checkboxManaFirst != null) {
                 checkboxManaFirst.render(guiGraphics, mouseX, mouseY, event.getPartialTick());

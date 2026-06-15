@@ -13,6 +13,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.*;
 
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,7 +28,8 @@ public class LootTableEvent {
             event.getTable().addPool(
                     LootPool.lootPool()
                             .add(LootItem.lootTableItem(ModItems.MAGE_HEART.get())
-                                    .setWeight(5)
+                                    .setWeight(1)
+                                    .when(LootItemRandomChanceCondition.randomChance(0.10f))
                                     .apply(new LootItemConditionalFunction.Builder() {
                                         @Override
                                         protected Builder getThis() {
@@ -54,6 +56,56 @@ public class LootTableEvent {
                                                     } else if (chance < 0.95) {
                                                         return MageHeartItem.createHeart(850, 4, Rarity.RARE);
                                                     } else if (chance < 0.99) {
+                                                        return MageHeartItem.createHeart(1000, 4, Rarity.EPIC);
+                                                    } else {
+                                                        return MageHeartItem.createHeart(1000, 5, Rarity.EPIC);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public LootItemFunctionType getType() {
+                                                    return LootItemFunctions.SET_NBT;
+                                                }
+                                            };
+                                        }
+                                    })
+                            )
+                            .build()
+            );
+        }
+
+        if (event.getName().equals(BuiltInLootTables.END_CITY_TREASURE)) {
+            event.getTable().addPool(
+                    LootPool.lootPool()
+                            .add(LootItem.lootTableItem(ModItems.MAGE_HEART.get())
+                                    .setWeight(1)
+                                    .when(LootItemRandomChanceCondition.randomChance(0.15f))
+                                    .apply(new LootItemConditionalFunction.Builder() {
+                                        @Override
+                                        protected Builder getThis() {
+                                            return this;
+                                        }
+
+                                        @Override
+                                        public LootItemFunction build() {
+                                            return new LootItemConditionalFunction(getConditions()) {
+                                                @Override
+                                                protected ItemStack run(ItemStack stack, LootContext context) {
+                                                    RandomSource random = context.getLevel().getRandom();
+                                                    double chance = random.nextDouble();
+                                                    if (chance < 0.20) {
+                                                        return MageHeartItem.createHeart(250, 1, Rarity.COMMON);
+                                                    } else if (chance < 0.40) {
+                                                        return MageHeartItem.createHeart(250, 2, Rarity.COMMON);
+                                                    } else if (chance < 0.55) {
+                                                        return MageHeartItem.createHeart(500, 2, Rarity.UNCOMMON);
+                                                    } else if (chance < 0.70) {
+                                                        return MageHeartItem.createHeart(500, 3, Rarity.UNCOMMON);
+                                                    } else if (chance < 0.82) {
+                                                        return MageHeartItem.createHeart(850, 3, Rarity.RARE);
+                                                    } else if (chance < 0.92) {
+                                                        return MageHeartItem.createHeart(850, 4, Rarity.RARE);
+                                                    } else if (chance < 0.98) {
                                                         return MageHeartItem.createHeart(1000, 4, Rarity.EPIC);
                                                     } else {
                                                         return MageHeartItem.createHeart(1000, 5, Rarity.EPIC);

@@ -34,13 +34,16 @@ public class MageHeartItem extends Item {
             if (tag != null) {
                 int maxMana = tag.getInt(MAX_MANA_TAG);
                 int regenMana = tag.getInt(REGEN_MANA_TAG);
-
-                ManaData.setMaxMana(player, maxMana);
-                ManaData.setRegenMana(player,regenMana);
-                ManaData.setMage(player);
-
+                if(ManaData.getMaxMana(player) < maxMana){
+                    ManaData.setMaxMana(player, maxMana);
+                }
+                if(ManaData.getRegenMana(player) < regenMana){
+                    ManaData.setRegenMana(player,regenMana);
+                }
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.PLAYERS, 1.0f, 1.0f);
+                ManaData.setMage(player);
+
             }
         }
 
