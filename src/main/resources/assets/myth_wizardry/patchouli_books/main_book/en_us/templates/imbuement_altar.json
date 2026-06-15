@@ -1,0 +1,54 @@
+{
+  "processor": "me.bread.myth_wizardry.patchouli.ImbuementRecipeProcessor",
+
+  "components": [
+    {
+      "type": "patchouli:image",
+      "image": "myth_wizardry:textures/gui/patchouli_craft_imbuement.png",
+      "x": 10,
+      "y": 10,
+      "width": 107,
+      "height": 64,
+      "texture_width": 107,
+      "texture_height": 64
+    },
+    {
+      "type": "patchouli:item",
+      "x": 15,
+      "y": 15,
+      "item": "#r0"
+    },
+    {
+      "type": "patchouli:item",
+      "x": 53,
+      "y": 15,
+      "item": "#r1"
+    },
+    {
+      "type": "patchouli:item",
+      "x": 15,
+      "y": 53,
+      "item": "#r2"
+    },
+    {
+      "type": "patchouli:item",
+      "x": 53,
+      "y": 53,
+      "item": "#r3"
+    },
+
+    {
+      "type": "patchouli:item",
+      "x": 34,
+      "y": 34,
+      "item": "#center"
+    },
+
+    {
+      "type": "patchouli:item",
+      "x": 91,
+      "y": 34,
+      "item": "#output"
+    }
+  ]
+}

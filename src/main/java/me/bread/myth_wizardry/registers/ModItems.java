@@ -28,9 +28,6 @@ public class ModItems {
                 }
             });
 
-    public static final RegistryObject<WandItem> MYTHICAL_WAND = ITEMS.register("wand_mythical",
-            () -> new WandItem(ModTiers.MYTHICAL,null));
-
     public static final RegistryObject<WandItem> NOVICE_STAFF = ITEMS.register("staff_novice",
             () -> new StaffItem(SpellTiers.NOVICE, null));
 
@@ -45,6 +42,10 @@ public class ModItems {
 
     public static final RegistryObject<WandItem> MYTHICAL_STAFF = ITEMS.register("staff_mythical",
             () -> new StaffItem(ModTiers.MYTHICAL, null));
+
+    public static final RegistryObject<WandItem> MYTHICAL_WAND = ITEMS.register("wand_mythical",
+            () -> new WandItem(ModTiers.MYTHICAL,null));
+
 
     public static final RegistryObject<WandItem> MYTHICAL_WAND_FIRE = ITEMS.register("wand_mythical_fire",
             () -> new WandItem(ModTiers.MYTHICAL, Elements.FIRE));

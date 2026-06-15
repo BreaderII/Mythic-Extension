@@ -1,0 +1,21 @@
+{
+  "name": "Two-Handed Staffs",
+  "icon": "myth_wizardry:staff_mythical",
+  "category": "myth_wizardry:basics",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "myth_wizardry:staff_novice,myth_wizardry:staff_apprentice,myth_wizardry:staff_advanced,myth_wizardry:staff_master,myth_wizardry:staff_mythical",
+      "text": "Two-handed staff are powerful alternatives to wands. They require an empty off-hand to use, but offer greater spell potency and mana efficiency",
+      "title": "Two-Handed Staffs",
+      "x": -1,
+      "y": -1,
+      "repeating": true
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "myth_wizardry:staff_novice",
+      "text": "The $(item)Novice Staff$() is the simplest two-handed staff.This is have progression as a vanilla wands"
+    }
+  ]
+}

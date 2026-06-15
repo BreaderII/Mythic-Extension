@@ -29,6 +29,6 @@ side="BOTH"
 [[dependencies.myth_wizardry]]
 modId="ebwizardry"
 mandatory=true
-versionRange="0.8.5"
+versionRange="[0.8.5,0.9)"
 ordering="AFTER"
 side="BOTH"

@@ -1,0 +1,13 @@
+{
+  "name": "Mage hearts",
+  "icon": "myth_wizardry:mage_heart",
+  "category": "myth_wizardry:mana_system",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "myth_wizardry:mage_heart",
+      "text": "A $(item)Mage Heart$() is a rare magical essence that sets your maximum mana to a specific value, overriding any previous value.Different hearts grant different mana caps.Found in $(l)Ancient Cities$() and $(l)End City chests$().",
+      "title": "Mage hearts"
+    }
+  ]
+}

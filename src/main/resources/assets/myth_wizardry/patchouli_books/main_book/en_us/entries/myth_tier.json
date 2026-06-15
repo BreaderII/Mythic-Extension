@@ -1,0 +1,25 @@
+{
+  "name": "Mythical Tier",
+  "icon": "myth_wizardry:arcane_tome_mythical",
+  "category": "myth_wizardry:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Mythical Wands",
+      "text": "The $(l)Mythical Tier$() is a new spell tier above Master. It represents the pinnacle of magical mastery, unlocking ancient powers. To reach this tier, you must craft the $(item)Mythical Arcane Tome$() at the Imbuement Altar."
+    },
+    {
+      "type": "imbuement_altar",
+      "recipe": "myth_wizardry:mythical"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "myth_wizardry:wand_mythical,myth_wizardry:wand_mythical_fire,myth_wizardry:wand_mythical_ice,myth_wizardry:wand_mythical_earth,myth_wizardry:wand_mythical_healing,myth_wizardry:wand_mythical_lightning,myth_wizardry:wand_mythical_necromancy,myth_wizardry:wand_mythical_sorcery",
+      "text": "Mythical wands are the most powerful wands ever created. They have higher mana capacity, faster regen, and can cast spells with increased potency",
+      "title": "Mythical Wands",
+      "x": -1,
+      "y": -1,
+      "repeating": true
+    }
+  ]
+}

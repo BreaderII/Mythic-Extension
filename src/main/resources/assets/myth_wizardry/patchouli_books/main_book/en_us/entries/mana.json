@@ -1,0 +1,11 @@
+{
+  "name": "Mana System",
+  "icon": "ebwizardry:crystal_block_magic",
+  "category": "myth_wizardry:mana_system",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The $(l)Mana System$() adds an extra layer to spell casting. Each wand now has its own mana pool, and spells can consume mana from this pool. You must find $(item)Mage Hearts$() to unlock mana capacity. This does not replace the original mod's mechanics — it's an additional resource you can use."
+    }
+  ]
+}
