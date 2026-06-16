@@ -1,0 +1,1 @@
+give @p patchouli:guide_book{ "patchouli:book": "myth_wizardry:main_book" }

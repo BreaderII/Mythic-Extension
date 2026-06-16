@@ -6,14 +6,17 @@ import me.bread.myth_wizardry.packets.NetworkHandler;
 import me.bread.myth_wizardry.packets.PacketUpdateWidgetStates;
 import me.bread.myth_wizardry.utils.ConfigHelper;
 import me.bread.myth_wizardry.utils.ManaData;
+import me.bread.myth_wizardry.utils.WizardData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -21,6 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.lang.reflect.Field;
+
 
 @Mod.EventBusSubscriber(modid = MythWizardry.MOD_ID, value = Dist.CLIENT)
 public class InventoryWidget {
@@ -34,6 +38,8 @@ public class InventoryWidget {
             new ResourceLocation(MythWizardry.MOD_ID, "textures/gui/widget_background.png");
 
     private static int currentMode = 0;
+    private static boolean manaFirstEnabled = false;
+    private static boolean manaSecondEnabled = false;
     private static Checkbox checkboxManaFirst;
     private static Checkbox checkboxAutoSecond;
     private static ImageButton modeButton;
@@ -46,7 +52,6 @@ public class InventoryWidget {
 
     private static int backgroundX, backgroundY;
 
-
     @SubscribeEvent
     public static void onScreenInit(ScreenEvent.Init.Post event) {
         Screen screen = event.getScreen();
@@ -57,14 +62,12 @@ public class InventoryWidget {
                 return;
             }
 
-            loadFromPlayerData(player);
-
             int elementWidth = 16;
             int elementHeight = 20;
             int spacing = 6;
             int padding = 4;
 
-            int startX = invScreen.getGuiLeft()+padding;
+            int startX = invScreen.getGuiLeft() + padding;
             int startY = invScreen.getGuiTop() - 24;
 
             backgroundX = startX - padding;
@@ -74,14 +77,14 @@ public class InventoryWidget {
                     startX, startY,
                     elementWidth, elementHeight,
                     Component.empty(),
-                    isManaDrainEnabled()
+                    manaFirstEnabled
             );
 
             checkboxAutoSecond = new Checkbox(
                     startX + elementWidth + spacing, startY,
                     elementWidth, elementHeight,
                     Component.empty(),
-                    isAutoRegenEnabled()
+                    manaSecondEnabled
             );
 
             modeButton = new ImageButton(
@@ -175,11 +178,15 @@ public class InventoryWidget {
 
             boolean handled = false;
 
-            if (checkboxManaFirst != null && checkboxManaFirst.mouseClicked(mouseX, mouseY, button)) {
+            if (checkboxManaFirst != null && checkboxManaFirst.isMouseOver(mouseX, mouseY) && button == 0) {
+                manaFirstEnabled = !manaFirstEnabled;
+                checkboxManaFirst.onPress();
                 handled = true;
                 syncToServer();
             }
-            if (checkboxAutoSecond != null && checkboxAutoSecond.mouseClicked(mouseX, mouseY, button)) {
+            if (checkboxAutoSecond != null && checkboxAutoSecond.isMouseOver(mouseX, mouseY) && button == 0) {
+                manaSecondEnabled = !manaSecondEnabled;
+                checkboxAutoSecond.onPress();
                 handled = true;
                 syncToServer();
             }
@@ -194,21 +201,21 @@ public class InventoryWidget {
     }
 
     private static void syncToServer() {
-        if (checkboxManaFirst != null && checkboxAutoSecond != null) {
-            NetworkHandler.INSTANCE.sendToServer(
-                    new PacketUpdateWidgetStates(
-                            checkboxManaFirst.selected(),
-                            checkboxAutoSecond.selected(),
-                            currentMode
-                    )
-            );
-        }
+        NetworkHandler.INSTANCE.sendToServer(
+                new PacketUpdateWidgetStates(
+                        manaFirstEnabled,
+                        manaSecondEnabled,
+                        currentMode
+                )
+        );
     }
 
-    private static void loadFromPlayerData(Player player) {
-        if (player.getPersistentData().contains("myth_wizardry_mode")) {
-            currentMode = player.getPersistentData().getInt("myth_wizardry_mode");
-        }
+
+
+    public static void updateFromPacket(boolean manaFirst, boolean manaSecond, int mode) {
+        manaFirstEnabled = manaFirst;
+        manaSecondEnabled = manaSecond;
+        currentMode = mode;
     }
 
     private static ResourceLocation getModeTexture() {
@@ -230,30 +237,29 @@ public class InventoryWidget {
             }
         }
     }
+    public static boolean isManaDrainEnabledServer(Player player) {
+        if (!(player instanceof ServerPlayer)) return false;
 
-    public static boolean isManaDrainEnabled() {
-        Player player = Minecraft.getInstance().player;
-        if (player != null && player.getPersistentData().contains("myth_wizardry_mana_first")) {
-            return player.getPersistentData().getBoolean("myth_wizardry_mana_first");
+        CompoundTag data = player.getPersistentData();
+        return data.getBoolean("myth_wizardry_mana_first");
+    }
+    public static boolean isAutoRegenEnabledServer(Player player) {
+        if (!(player instanceof ServerPlayer)) return false;
+
+        CompoundTag data = player.getPersistentData();
+        return data.getBoolean("myth_wizardry_mana_second");
+    }
+    public static int getCurrentModeServer(Player player) {
+        if (!(player instanceof ServerPlayer serverPlayer)) {
+            return 0;
         }
-        return false;
+
+        CompoundTag data = serverPlayer.getPersistentData();
+
+
+        return data.getInt("myth_wizardry_mode");
     }
 
-    public static boolean isAutoRegenEnabled() {
-        Player player = Minecraft.getInstance().player;
-        if (player != null && player.getPersistentData().contains("myth_wizardry_mana_second")) {
-            return player.getPersistentData().getBoolean("myth_wizardry_mana_second");
-        }
-        return false;
-    }
-
-    public static int getCurrentMode() {
-        Player player = Minecraft.getInstance().player;
-        if (player != null && player.getPersistentData().contains("myth_wizardry_mode")) {
-            return player.getPersistentData().getInt("myth_wizardry_mode");
-        }
-        return 0;
-    }
     public enum Mode {
         WAND(0),
         MIXED(2),

@@ -36,12 +36,12 @@ public class WandTooltipRenderer {
     private static final ResourceLocation SPELL_NONE =
             new ResourceLocation(WizardryMainMod.MOD_ID, "textures/spells/none.png");
 
-    private static final int VANILLA_BG_TOP = 0xF0101010;
-    private static final int VANILLA_BG_BOTTOM = 0xF0101010;
+    private static final int VANILLA_BG_TOP = 0xFF101010;
+    private static final int VANILLA_BG_BOTTOM = 0xFF101010;
 
-    private static final int GRAY_BORDER = 0x4F4F4F;
+    private static final int GRAY_BORDER = 0xFF4F4F;
     private static final int FULL_ALPHA = 0xFF;
-    private static final int INNER_BORDER_ALPHA = 0x50;
+    private static final int INNER_BORDER_ALPHA = 0xFF;
 
     private static final float VANILLA_WEIGHT = 0.90f;
     private static final float ELEMENT_WEIGHT = 0.10f;

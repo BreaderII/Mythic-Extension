@@ -8,12 +8,15 @@ import me.bread.myth_wizardry.MythWizardry;
 import me.bread.myth_wizardry.gui.InventoryWidget;
 import me.bread.myth_wizardry.utils.ConfigHelper;
 import me.bread.myth_wizardry.utils.ManaData;
+import me.bread.myth_wizardry.utils.WizardData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+
 
 @Mod.EventBusSubscriber(modid = MythWizardry.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CastSpellEvent {
@@ -27,132 +30,90 @@ public class CastSpellEvent {
         WizardryEventBus bus = WizardryEventBus.getInstance();
 
         bus.register(SpellCastEvent.Pre.class, event -> {
-            if (event.getSource() == SpellCastEvent.Source.WAND &&
-                    event.getCaster() instanceof Player player && ManaData.isMage(player) && ConfigHelper.isManaSystemEnabled()) {
-                int baseCost = event.getSpell().getCost();
-                float costModifier = event.getModifiers().get(SpellModifiers.COST);
-                int manaCost = Math.max(1, (int) (baseCost * costModifier));
+            if (event.getSource() != SpellCastEvent.Source.WAND) return;
+            if (!(event.getCaster() instanceof Player player)) return;
+            if (!ManaData.isMage(player) || !ConfigHelper.isManaSystemEnabled()) return;
 
-                if (!hasEnoughManaForSpell(player, manaCost)) {
-                    event.setCanceled(true);
-                    return;
-                }
+            int baseCost = event.getSpell().getCost();
+            float costModifier = event.getModifiers().get(SpellModifiers.COST);
+            int manaCost = Math.max(1, (int) (baseCost * costModifier));
 
-                consumeManaForSpell(player, manaCost);
+            if (!canEventuallyPay(player, manaCost)) {
+                event.setCanceled(true);
             }
         });
 
         bus.register(SpellCastEvent.Tick.class, event -> {
-            if (event.getSource() == SpellCastEvent.Source.WAND &&
-                    event.getCaster() instanceof Player player && ManaData.isMage(player) && ConfigHelper.isManaSystemEnabled()) {
+            if (event.getSource() != SpellCastEvent.Source.WAND) return;
+            if (!(event.getCaster() instanceof Player player)) return;
+            if (!ManaData.isMage(player) || !ConfigHelper.isManaSystemEnabled()) return;
 
-                if (event.getTicksCasting() % 20 != 0) {
-                    return;
-                }
+            if (event.getTicksCasting() % 20 != 0) return;
 
-                int baseCost = event.getSpell().getCost();
-                float costModifier = event.getModifiers().get(SpellModifiers.COST);
-                int manaCost = Math.max(1, (int) (baseCost * costModifier));
+            int baseCost = event.getSpell().getCost();
+            float costModifier = event.getModifiers().get(SpellModifiers.COST);
+            int manaCost = Math.max(1, (int) (baseCost * costModifier));
 
-                if (!hasEnoughManaForSpell(player, manaCost)) {
-                    event.setCanceled(true);
-                    return;
-                }
-
-                consumeManaForSpell(player, manaCost);
+            if (!tryConsumeSmart(player, manaCost)) {
+                event.setCanceled(true);
             }
         });
     }
 
-    private static boolean hasEnoughManaForSpell(Player player, int manaCost) {
-        boolean manaFirst = InventoryWidget.isManaDrainEnabled();
-        boolean manaSecond = InventoryWidget.isAutoRegenEnabled();
+    private static boolean canEventuallyPay(Player player, int cost) {
+        if (!(player instanceof ServerPlayer sp)) return true;
 
-        ItemStack wand = player.getMainHandItem();
-        int wandMana = 0;
-        if (wand.getItem() instanceof IManaItem manaItem) {
-            wandMana = manaItem.getMana(wand);
-        }
-        int playerMana = ManaData.getCurrentMana(player);
-        int totalMana = playerMana + wandMana;
+        ItemStack wand = sp.getMainHandItem();
 
-        if (manaFirst && manaSecond) {
-            return totalMana >= manaCost;
-        }
+        int wandMana = (wand.getItem() instanceof IManaItem m) ? m.getMana(wand) : 0;
+        int playerMana = ManaData.getCurrentMana(sp);
 
-        if (manaFirst) {
-            int remaining = manaCost;
-            if (playerMana >= remaining) {
-                return true;
-            }
-            remaining -= playerMana;
-            return wandMana >= remaining;
-        }
-
-        if (manaSecond) {
-            int remaining = manaCost;
-            if (wandMana >= remaining) {
-                return true;
-            }
-            remaining -= wandMana;
-            return playerMana >= remaining;
-        }
-
-        return totalMana >= manaCost;
+        return (wandMana + playerMana) > 0;
     }
 
-    private static void consumeManaForSpell(Player player, int manaCost) {
-        boolean manaFirst = InventoryWidget.isManaDrainEnabled();
-        boolean manaSecond = InventoryWidget.isAutoRegenEnabled();
 
-        ItemStack wand = player.getMainHandItem();
+    private static boolean tryConsumeSmart(Player player, int cost) {
+        if (!(player instanceof ServerPlayer sp)) return true;
 
-        if (manaFirst && manaSecond) {
-            int playerMana = ManaData.getCurrentMana(player);
-            int fromPlayer = Math.min(playerMana, manaCost);
-            int remaining = manaCost - fromPlayer;
+        boolean manaFirst = InventoryWidget.isManaDrainEnabledServer(sp);
+        boolean manaSecond = InventoryWidget.isAutoRegenEnabledServer(sp);
 
-            ManaData.removeMana(player, fromPlayer);
+        ItemStack wand = sp.getMainHandItem();
+        IManaItem manaItem = (wand.getItem() instanceof IManaItem m) ? m : null;
 
-            if (remaining > 0 && wand.getItem() instanceof IManaItem manaItem) {
-                int wandMana = manaItem.getMana(wand);
-                manaItem.setMana(wand, Math.max(wandMana - remaining, 0));
-            }
-        } else if (manaFirst) {
-            int playerMana = ManaData.getCurrentMana(player);
-            int fromPlayer = Math.min(playerMana, manaCost);
-            int remaining = manaCost - fromPlayer;
+        int wandMana = manaItem != null ? manaItem.getMana(wand) : 0;
+        int playerMana = ManaData.getCurrentMana(sp);
 
-            ManaData.removeMana(player, fromPlayer);
+        int remaining = cost;
 
-            if (remaining > 0 && wand.getItem() instanceof IManaItem manaItem) {
-                int wandMana = manaItem.getMana(wand);
-                manaItem.setMana(wand, Math.max(wandMana - remaining, 0));
-            }
-        } else if (manaSecond) {
-            int remaining = manaCost;
+        if (manaSecond) {
+            int fromPlayer = Math.min(playerMana, remaining);
+            ManaData.removeMana(sp, fromPlayer);
+            remaining -= fromPlayer;
+        }
 
-            if (wand.getItem() instanceof IManaItem manaItem) {
-                int wandMana = manaItem.getMana(wand);
+        if (remaining > 0 && manaItem != null) {
+            if (manaFirst || manaSecond) {
                 int fromWand = Math.min(wandMana, remaining);
+                manaItem.setMana(wand, wandMana - fromWand);
                 remaining -= fromWand;
-                manaItem.setMana(wand, Math.max(wandMana - fromWand, 0));
-            }
-
-            if (remaining > 0) {
-                ManaData.removeMana(player, remaining);
-            }
-        } else {
-            int playerMana = ManaData.getCurrentMana(player);
-            int fromPlayer = Math.min(playerMana, manaCost);
-            int remaining = manaCost - fromPlayer;
-
-            ManaData.removeMana(player, fromPlayer);
-
-            if (remaining > 0 && wand.getItem() instanceof IManaItem manaItem) {
-                int wandMana = manaItem.getMana(wand);
-                manaItem.setMana(wand, Math.max(wandMana - remaining, 0));
             }
         }
+
+        if (remaining > 0 && manaItem != null && !manaFirst && !manaSecond) {
+
+            int total = wandMana + playerMana;
+            if (total < cost) return false;
+
+            int fromWand = Math.min(wandMana, remaining);
+            manaItem.setMana(wand, wandMana - fromWand);
+            remaining -= fromWand;
+
+            int fromPlayer = Math.min(playerMana, remaining);
+            ManaData.removeMana(sp, fromPlayer);
+            remaining -= fromPlayer;
+        }
+
+        return remaining <= 0;
     }
 }

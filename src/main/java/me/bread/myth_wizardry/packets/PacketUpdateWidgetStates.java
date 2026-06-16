@@ -1,26 +1,31 @@
 package me.bread.myth_wizardry.packets;
 
+import me.bread.myth_wizardry.gui.InventoryWidget;
+import me.bread.myth_wizardry.utils.WizardData;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
 public class PacketUpdateWidgetStates {
-    private final boolean mana_first;
-    private final boolean mana_second;
+    private final boolean manaDrain;
+    private final boolean autoRegen;
     private final int mode;
 
     public PacketUpdateWidgetStates(boolean manaDrain, boolean autoRegen, int mode) {
-        this.mana_first = manaDrain;
-        this.mana_second = autoRegen;
+        this.manaDrain = manaDrain;
+        this.autoRegen = autoRegen;
         this.mode = mode;
     }
 
     public static void encode(PacketUpdateWidgetStates msg, FriendlyByteBuf buf) {
-        buf.writeBoolean(msg.mana_first);
-        buf.writeBoolean(msg.mana_second);
+        buf.writeBoolean(msg.manaDrain);
+        buf.writeBoolean(msg.autoRegen);
         buf.writeInt(msg.mode);
     }
 
@@ -33,23 +38,41 @@ public class PacketUpdateWidgetStates {
     }
 
     public static void handle(PacketUpdateWidgetStates msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            if (ctx.get().getDirection().getReceptionSide().isServer()) {
-                ServerPlayer player = ctx.get().getSender();
-                if (player != null) {
-                    player.getPersistentData().putBoolean("myth_wizardry_mana_first", msg.mana_first);
-                    player.getPersistentData().putBoolean("myth_wizardry_auto_second", msg.mana_second);
-                    player.getPersistentData().putInt("myth_wizardry_mode", msg.mode);
-                }
-            } else {
-                Minecraft.getInstance().player.getPersistentData()
-                        .putBoolean("myth_wizardry_mana_first", msg.mana_first);
-                Minecraft.getInstance().player.getPersistentData()
-                        .putBoolean("myth_wizardry_auto_second", msg.mana_second);
-                Minecraft.getInstance().player.getPersistentData()
-                        .putInt("myth_wizardry_mode", msg.mode);
+        NetworkEvent.Context context = ctx.get();
+
+        context.enqueueWork(() -> {
+
+            if (context.getDirection().getReceptionSide().isServer()) {
+
+                ServerPlayer player = context.getSender();
+
+                if (player == null) return;
+
+                WizardData.set(player,
+                        msg.manaDrain,
+                        msg.autoRegen,
+                        msg.mode
+                );
+
+                NetworkHandler.INSTANCE.send(
+                        PacketDistributor.PLAYER.with(() -> player),
+                        new PacketUpdateWidgetStates(
+                                msg.manaDrain,
+                                msg.autoRegen,
+                                msg.mode
+                        )
+                );
+            }
+
+            else {
+                InventoryWidget.updateFromPacket(
+                        msg.manaDrain,
+                        msg.autoRegen,
+                        msg.mode
+                );
             }
         });
-        ctx.get().setPacketHandled(true);
+
+        context.setPacketHandled(true);
     }
 }
